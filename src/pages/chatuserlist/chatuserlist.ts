@@ -4,6 +4,7 @@ import { SetupService } from '../../providers/setup.services';
 import { ChatroomPage } from '../../pages/chatroom/chatroom';
 import { UserEmailId } from '../../interfaces/user-options';
 import { Geolocation } from '@ionic-native/geolocation';
+ import  {GmapPage } from '../gmap/gmap';
 /**
  * Generated class for the ChatuserlistPage page.
  *
@@ -28,30 +29,24 @@ public latitude: number;
   public zoom: number;
   constructor(private geolocation: Geolocation,public _setupService: SetupService, public navCtrl: NavController, public navParams: NavParams,public platform: Platform) {
      let backAction =  platform.registerBackButtonAction(() => {
-        console.log("second");
+       
         this.navCtrl.pop();
         backAction();
       },2)
      this.userdata();
-     // this._setupService.getfrienlist1(this.UserId.email).subscribe((response) => {
-     //    if(response.statusCode==200){
-     //      this.friendList=response.data; 
-     //      console.log("this.friendList = = "+JSON.stringify(this.friendList));      
-     //    }               
-     //  });
+    
 
-      this._setupService.getfrienlist1().subscribe((response) => {
-           
-          this.friendList=response; 
-          
-          console.log("this.friendList = = "+JSON.stringify(this.friendList));      
-                
+      this._setupService.getfrienlist({email:this.UserId.email}).subscribe((response) => {
+           if(response.statusCode==200){
+              this.friendList=response.data; 
+              console.log(" this.friendList = = "+JSON.stringify(this.friendList)); 
+             }   
       });
   }
   userdata(){       
      this.user=JSON.parse(localStorage.getItem('logindetail'));
          if(this.user!=null||this.user!=undefined){
-        this.UserId.email=this.user.trader.email;
+        this.UserId.email=this.user.user.email;
       }
     }
 
@@ -74,16 +69,18 @@ public latitude: number;
             timeout:10000
        }; 
        this.geolocation.getCurrentPosition(options).then((response) => {
-       this.latitude =response.coords.latitude;  
-      // alert("this.latitude = = "+this.latitude);           
-       this.longitude =response.coords.longitude; 
-      // alert("this.longitude = = "+this.longitude); 
+       this.latitude =response.coords.latitude;             
+       this.longitude =response.coords.longitude;
       this.zoom = 16;      
 
        }).catch((error) => {   
      });
    });  
 
+  }
+
+  addTraders(){
+    this.navCtrl.setRoot(GmapPage);
   }
 
 }

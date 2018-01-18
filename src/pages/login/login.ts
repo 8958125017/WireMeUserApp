@@ -5,7 +5,6 @@ import { UserData } from '../../providers/user-data';
 import { UserOptions,LoginDetail } from '../../interfaces/user-options';
 import { ForgotpasswordPage } from '../forgotpassword/forgotpassword';
 import { SignupPage } from '../signup/signup';
-import { ChangepasswordPage } from '../changepassword/changepassword';
 import { GmapPage } from '../gmap/gmap';
 import { SetupService } from '../../providers/setup.services';
 @Component({
@@ -13,8 +12,8 @@ import { SetupService } from '../../providers/setup.services';
   templateUrl: 'login.html'
 })
 export class LoginPage {
-  login: UserOptions = { username: '', password: '' };
-  loginDetail: LoginDetail = { email: '', password: '',lat:'', long:'' };
+  login: UserOptions = { username: '', password: ''};
+  loginDetail: LoginDetail = { email: "", password: "",lat:'', long:'' };
   responseData:any;
   public user:any;
   submitted = false;
@@ -22,6 +21,7 @@ export class LoginPage {
 constructor(public userData: UserData,public navCtrl: NavController,public toastCtrl: ToastController,public events: Events,public menuCtrl: MenuController, public navParams: NavParams,public _setupService: SetupService,public loadingCtrl: LoadingController) {
 this.setCurrentPosition();
   }
+  
  public setCurrentPosition() {
       if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -30,7 +30,8 @@ this.setCurrentPosition();
       });
     }
   }
-onlogin12(form: NgForm){
+
+onlogin1(form: NgForm){
   this.submitted = true; 
   if (form.valid) {  
        this.userData.login(this.login.username);   
@@ -46,8 +47,8 @@ onlogin12(form: NgForm){
               this.userName=this.responseData.user.email; 
               this.events.publish("shareObject", this.userName);         
              loading.dismiss();  
-        this.navCtrl.setRoot(GmapPage);
-      }else{
+             this.navCtrl.setRoot(GmapPage);
+         }else{
                      this.responseData = result;
                      loading.dismiss();
                      let toast = this.toastCtrl.create({
@@ -65,11 +66,13 @@ onlogin12(form: NgForm){
     // the root left menu should be disabled on the tutorial page
       this.menuCtrl.enable(false);
     }
+
    ionViewWillLeave() {
      // enable the root left menu when leaving the tutorial page
     this.menuCtrl.enable(true);
   }
-  onlogin1(form: NgForm) {   
+
+  onlogin12(form: NgForm) {   
     this.submitted = true; 
     if (form.valid) {  
       this.userData.login(this.login.username);  
