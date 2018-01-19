@@ -60,9 +60,10 @@ export class GmapPage implements OnInit{
    traderInrValueAfterUpdate: updateValue= { email: '', buyRate: '0', currencyType:'',volume:'0',sellRate:'0' };  
   constructor(public navCtrl: NavController,public toastCtrl: ToastController,public events: Events,private geolocation: Geolocation,public platform: Platform,public loadingCtrl: LoadingController,public storage: Storage,private mapsAPILoader: MapsAPILoader,public _setupService: SetupService, private ngZone: NgZone ) 
    {
-           this.io.sails.url = "http://198.187.28.200:3000";     
+      this.io.sails.url = "http://198.187.28.200:3000";     
       this.data=false;
       this.userdata();     
+      this.loadAllTraders();
       if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         this.latitude = position.coords.latitude;
@@ -114,6 +115,7 @@ listenToDataChangeEvents() {
      this.user=JSON.parse(localStorage.getItem('logindetail'));
        if(this.user!=null||this.user!=undefined){
         this.chatRequest.sender=this.user.user.email;
+        this.events.publish("shareObject", this.user.user.email); 
       }
    }
   mapClicked(){
@@ -236,7 +238,7 @@ ionViewWillEnter() {
   loadAllTraders(){
     this.tradersMarker = [];
    this._setupService.getTradersLocation().subscribe((res) => {
-   
+   console.log("res = = "+JSON.stringify(res));
      if (res) {      
        for(var traders of res.data){    
                 this.tradersMarker.push({ 
